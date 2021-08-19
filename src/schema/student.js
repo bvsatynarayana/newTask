@@ -36,8 +36,4 @@ export default gql`
       address: String
       meetingTime: String
   }
-
-  type Token {
-    token: String!
-  }
 `;

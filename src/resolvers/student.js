@@ -5,15 +5,12 @@ import { isAdmin } from './authorization';
 export default {
   Query: {
     getStudentById: (parent, { id }, { models }) => {
-      return models.Student.findById(id);
+      return models.Student.findByPk(id);
     },
 
     searchStudents: (parent, {limit, skip, term}, { models }) => {
       return models.Student.findAll({
         where: {
-          FirstName: {
-            $like: term ? `${term}%` : null
-          }
        },
         limit,
         offset: skip,
@@ -38,19 +35,18 @@ export default {
     ) => {
       const StudentInfo = await models.Student.update(
         data,
-        { where: { id: id } },
+        { where: { id: id }, individualHooks: true, },
       );
+      console.log('sttt', StudentInfo);
 
       return StudentInfo;
     },
 
-    deleteStudent: combineResolvers(
-      isAdmin,
+    deleteStudent:
       async (parent, { id }, { models }) => {
         return await models.Student.destroy({
           where: { id }
         });
-      }
-    ),
+      },
   },
 }

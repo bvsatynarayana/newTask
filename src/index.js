@@ -8,6 +8,7 @@ import schema from './schema';
 import resolvers from './resolvers';
 import loaders from './loaders';
 import models, { sequelize } from './models';
+import config from './config';
 
 const app = express();
 
@@ -20,7 +21,7 @@ const getMe = async req => {
 
   if (token) {
     try {
-      return await jwt.verify(token, process.env.JWT_SECRET);
+      return await jwt.verify(token, config.JWT_SECRET);
     } catch (e) {
       throw new AuthenticationError('Your session expired. Signin again.');
     }
@@ -49,10 +50,10 @@ const server = new ApolloServer({
 
     return {
       models,
-      me, 
-      secret: process.env.JWT_SECRET,
+      me,
+      secret: config.JWT_SECRET,
       loaders: {
-        user: new DataLoader(keys => loaders.user.batchUsers(keys, models))  
+        user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
       },
     };
   },
